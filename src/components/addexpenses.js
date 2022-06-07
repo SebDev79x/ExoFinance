@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View,TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
-const loginValidationSchema = yup.object().shape({
+const expensesValidationSchema = yup.object().shape({
 
     firstname: yup
         .string()
@@ -55,7 +55,7 @@ const AddExpenses = () => {
 
                 }
                 }
-                validationSchema={loginValidationSchema}
+                validationSchema={expensesValidationSchema}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, touched, isValid, errors }) => (
                     <View>
@@ -95,7 +95,7 @@ const AddExpenses = () => {
                             {(touched.lastname && errors.lastname) && <Text style={styles.errors}>{errors.lastname}</Text>}
                         </View>
                         <View style={{ height: 30 }}>ESPACE</View>
-                  {/*       <View>
+                        {/*       <View>
                             <View style={styles.center}>
                                 <Text style={styles.label}>Date</Text>
                             </View>
@@ -132,6 +132,8 @@ const AddExpenses = () => {
                             <View>
                                 <TextInput
                                     style={styles.input}
+                                    multiline
+                                    numberOfLines={10}
                                     mode="flat"
                                     placeholder="Commentaire"
                                     placeholderTextColor={'grey'}
@@ -142,6 +144,15 @@ const AddExpenses = () => {
                             </View>
                             {(touched.comment && errors.comment) && <Text style={styles.errors}>{errors.comment}</Text>}
                         </View>
+                        <View style={styles.center2}>
+                            <TouchableOpacity
+                                style={styles.btnPass}
+                                disabled={!isValid}
+                                onPress={handleSubmit} title="Submit"
+                                >
+                                <Text style={styles.textPass}>Valider</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 )}
             </Formik>
@@ -151,90 +162,90 @@ const AddExpenses = () => {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#8CC0DE',
-      alignItems: 'center',
-      justifyContent: 'space-evenly'
+        flex: 1,
+        backgroundColor: '#8CC0DE',
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
     },
     input: {
   /*     height: 40,
    */    backgroundColor: '#fcf5d9',
-      color: 'black',
-      fontSize: 18,
-      borderRadius: 10,
-  padding:10
+        color: 'black',
+        fontSize: 18,
+        borderRadius: 10,
+        padding: 10
     },
     column: {
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center'
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     label: {
-      marginBottom: 10,
-      color: '#FAF0D7',
-      fontWeight:'bold',
-      fontSize: 20,
-  
+        marginBottom: 10,
+        color: '#FAF0D7',
+        fontWeight: 'bold',
+        fontSize: 20,
+
     },
-  
+
     inputs: {
   /*     marginBottom: 10,
    */    flexDirection: 'column',
-      justifyContent: 'space-around',
+        justifyContent: 'space-around',
     },
     btnValidate: {
-      /* '#306ec2' */
-      backgroundColor: 'yellow',
-      padding: 10,
-      width: 150,
-      alignItems: 'center',
-      borderRadius: 10
-  
+        /* '#306ec2' */
+        backgroundColor: 'yellow',
+        padding: 10,
+        width: 150,
+        alignItems: 'center',
+        borderRadius: 10
+
     },
     textValidate: {
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: 20
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 20
     },
     errors: {
-      color: 'red'
+        color: 'red'
     },
     align: {
-      flexDirection: 'row'
+        flexDirection: 'row'
     },
     center: {
-      alignItems: 'center'
+        alignItems: 'center'
     },
     center2: {
-      alignItems: 'center',
-      marginTop:15
+        alignItems: 'center',
+        marginTop: 15
     },
     btnPass: {
-      /* '#306ec2' */
-      backgroundColor: '#FFA8A8',
-      padding: 10,
-      width: 150,
-      alignItems: 'center',
-      marginBottom: 10,
-      borderRadius: 18
+        /* '#306ec2' */
+        backgroundColor: '#FFA8A8',
+        padding: 10,
+        width: 150,
+        alignItems: 'center',
+        marginBottom: 10,
+        borderRadius: 18
     },
     textPass: {
-      color: 'white',
-      fontWeight: 'bold',
-      fontSize: 20
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 20
     },
     /* end :{
       alignItems:'flex-end'
     } */
-  /*   pic: {
-      width: 180,
-      height: 180,
-      resizeMode: 'contain'
-    },
-      picContainer: {
-        flex: .4,
-      
-      }, */
-  });
+    /*   pic: {
+        width: 180,
+        height: 180,
+        resizeMode: 'contain'
+      },
+        picContainer: {
+          flex: .4,
+        
+        }, */
+});
 
 export default AddExpenses
