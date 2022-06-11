@@ -1,55 +1,57 @@
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
+import SelectDropdown from 'react-native-select-dropdown'
+
+const incomesMisc = ["Salaire et assimilé", "Financier", "Rente", "Pension alimentaire", "Alloc", "Prestations sociales", "Foncier", "Exceptionnel", "Autre"]
 
 const incomesValidationSchema = yup.object().shape({
 
     firstname: yup
         .string()
         .min(3, ({ min }) => `Minimum ${min} caractères`)
-        .max(10, ({ min }) => `Minimum ${min} caractères`)
+        .max(10, ({ max }) => `Minimum ${max} caractères`)
         .required('Requis')
         .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+            /^/,
             "Prénom invalide"
         ),
     lastname: yup
         .string()
         .min(3, ({ min }) => `Minimum ${min} caractères`)
-        .max(10, ({ min }) => `Minimum ${min} caractères`)
+        .max(10, ({ max }) => `Minimum ${max} caractères`)
         .required('Requis')
         .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+            /^/,
             "Nom invalide"
         ),
-    date: yup
-        .string()
-        .required('Requis')
-        .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-            "Date invalide"
-        ),
     category: yup
-        .string()
-        .min(8, ({ min }) => `Minimum ${min} caractères`)
-        .required('Requis'),
+        .string(),
     comment: yup
         .string()
         .min(5, ({ min }) => `Minimum ${min} caractères`)
-        .max(50, ({ min }) => `Minimum ${min} caractères`)
+        .max(50, ({ max }) => `Minimum ${max} caractères`)
         .required('Requis')
         .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+            /^/,
             "Commentaire invalide"
         )
 });
-const AddIncomes = () => {
+
+
+const AddIncomes = ({ navigation }) => {
+    const [category, setCategory] = useState("Aucune catégorie");
+
     return (
         <View>
             <Formik
-                initialValues={{ firstname: '', lastname: '', date: '', category: '', comment: '' }}
+                initialValues={{ firstname: '', lastname: '', category: '', comment: '' }}
                 validateOnMount={true}
-                onSubmit={() => {
+                onSubmit={(data) => {
+                    data.category = category
+                    console.log(data, "data");
+                    navigation.navigate('Accueil', { data })
 
                 }
                 }
@@ -74,7 +76,8 @@ const AddIncomes = () => {
                             </View>
                             {(touched.firstname && errors.firstname) && <Text style={styles.errors}>{errors.firstname}</Text>}
                         </View>
-                        <View style={{ height: 30 }}>ESPACE</View>
+                        <View style={{ height: 30 }}><Text>ESPACE</Text></View>
+
                         <View>
                             <View style={styles.center}>
                                 <Text style={styles.label}>Nom</Text>
@@ -92,37 +95,28 @@ const AddIncomes = () => {
                             </View>
                             {(touched.lastname && errors.lastname) && <Text style={styles.errors}>{errors.lastname}</Text>}
                         </View>
-                        <View style={{ height: 30 }}>ESPACE</View>
-                        {/*       <View>
-                    <View style={styles.center}>
-                        <Text style={styles.label}>Date</Text>
-                    </View>
-                    <View>
-                        <TextInput
-                            style={styles.input}
-                            mode="flat"
-                            placeholder="Choisissez une date"
-                            placeholderTextColor={'grey'}
-                            onChangeText={handleChange('date')}
-                            onBlur={handleBlur('date')}
-                            value={values.email}
-                        />
-                    </View>
-                    {(touched.date && errors.date) && <Text style={styles.errors}>{errors.date}</Text>}
-                </View>
-                <View style={{ height: 30 }}>ESPACE</View>
-                <View>
-                    <View style={styles.center}>
-                        <Text style={styles.label}>Catégorie</Text>
-                    </View>
-                    <View>
-                        <TextInput
+                        <View style={{ height: 30 }}><Text>ESPACE</Text></View>
+                        <View>
+                            <SelectDropdown
+                                rules={{
+                                    required: {
+                                        message: 'Champ requis'
+                                    },
+                                }}
+                                buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                                buttonStyle={styles.dropdown3BtnStyle}
+                                data={incomesMisc}
+                                value={values.category}
+                                onSelect={(selectedItem, index) => {
+                                    console.log(selectedItem, index);
+                                    setCategory(selectedItem)
+                                }}
+                            />
+                        </View>
+                        <View>
+                            <View style={{ height: 30 }}><Text>ESPACE</Text></View>
 
-                        />
-                    </View>
-                    {(touched.category && errors.category) && <Text style={styles.errors}>{errors.category}</Text>}
-                </View> */}
-                        <View style={{ height: 30 }}>ESPACE</View>
+                        </View>
                         <View>
                             <View style={styles.center}>
                                 <Text style={styles.label}>Commentaire</Text>
@@ -142,11 +136,11 @@ const AddIncomes = () => {
                             </View>
                             {(touched.comment && errors.comment) && <Text style={styles.errors}>{errors.comment}</Text>}
                         </View>
+
                         <View style={styles.center2}>
                             <TouchableOpacity
                                 style={styles.btnPass}
-                                disabled={!isValid}
-                                onPress={handleSubmit} title="Submit"                    >
+                                onPress={handleSubmit} title="Submit">
                                 <Text style={styles.textPass}>Valider</Text>
                             </TouchableOpacity>
                         </View>
@@ -157,6 +151,15 @@ const AddIncomes = () => {
     );
 }
 
+
+
+
+
+
+
+
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -166,7 +169,7 @@ const styles = StyleSheet.create({
     },
     input: {
 /*     height: 40,
-*/    backgroundColor: '#fcf5d9',
+*/    backgroundColor: 'grey',
         color: 'black',
         fontSize: 18,
         borderRadius: 10,
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
     },
     label: {
         marginBottom: 10,
-        color: '#FAF0D7',
+        color: 'blue',
         fontWeight: 'bold',
         fontSize: 20,
 
@@ -243,6 +246,20 @@ const styles = StyleSheet.create({
     flex: .4,
     
     }, */
+    dropdown3BtnStyle: {
+        height: 50,
+        backgroundColor: '#68A7AD',
+        paddingHorizontal: 0,
+        borderRadius: 18,
+        borderColor: '#444',
+
+    },
+    dropdown1BtnTxtStyle: {
+        color: '#fcf5d9',
+        fontWeight: 'bold',
+        fontSize: 20,
+
+    }
 });
 
 export default AddIncomes;

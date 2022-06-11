@@ -12,7 +12,7 @@ const TabNav = () => {
         <Tab.Screen options={{
     headerShown: false
   }}
-  name="Accueil" component={HomeScreen} />
+  name="Retour" component={HomeScreen} />
         <Tab.Screen name="Mon compte" component={Account} />
         <Tab.Screen name="Mes stats" component={Stats} />
       </Tab.Navigator>

@@ -1,17 +1,41 @@
 import * as React from 'react';
 import { StyleSheet, Text, View, Button, Image, TouchableOpacity } from 'react-native';
-
+import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const HomeScreen = ({ navigation }) => {
+    const [mySolde, setSolde] = useState('')
+
+    const GetData = async () => {
+        console.log("youpi", mySolde)
+
+        try {
+            const value = await AsyncStorage.getItem('solde')
+            if (value !== null) {
+                // We have data!!
+                console.log(value, "ouais");
+                setSolde(value);
+            }
+        } catch (e) {
+            // error reading value
+        }
+    }
+
+
     return (
         <View style={styles.container}>
-
             <View style={styles.alignAsARow}>
-           <Text>SOLDE</Text>
-           <Text> || </Text>
+                
+                <TouchableOpacity
+                    onPress={() => GetData()}
 
-           <Text>DERNIERES OPERATIONS</Text>
+                >
+                    <Text >Mon solde : {mySolde}</Text>
+                </TouchableOpacity>
+                <Text>SOLDE </Text>
+                <Text> || </Text>
+                <Text>DERNIERES OPERATIONS</Text>
 
             </View>
             <View style={styles.btns}>
@@ -25,7 +49,7 @@ const HomeScreen = ({ navigation }) => {
                         <Text style={styles.textConnection}>Ajout REVENUS</Text>
                     </TouchableOpacity>
                 </View>
-         
+
                 <View>
                     <TouchableOpacity
                         style={styles.btnRegister}
@@ -47,31 +71,31 @@ const styles = StyleSheet.create({
         backgroundColor: '#FAF0D7',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        borderWidth:2,
-        borderColor:'red'
+        borderWidth: 2,
+        borderColor: 'red'
     },
-    btns:{
-        flexDirection:'row',
-        justifyContent:'center',
-        borderWidth:2,
-        borderColor:'red'
+    btns: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderColor: 'red'
     },
     validate: {
         width: 200,
         height: 200,
         resizeMode: 'contain'
     },
-  /*   btns: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    }, */
-    alignAsARow:{
-        flexDirection:'row'
+    /*   btns: {
+          justifyContent: 'center',
+          alignItems: 'center',
+      }, */
+    alignAsARow: {
+        flexDirection: 'row'
     },
 
     btnConnection: {
         padding: 10,
-    
+
         backgroundColor: '#306ec2',
 
         /* '#306ec2' */
@@ -79,18 +103,18 @@ const styles = StyleSheet.create({
         padding: 10,
         width: 150,
         alignItems: 'center',
-        marginBottom:15,
-        borderRadius:10
+        marginBottom: 15,
+        borderRadius: 10
 
     },
     btnRegister: {
         padding: 10,
- 
+
         backgroundColor: '#F4BFBF',
         padding: 10,
         width: 150,
         alignItems: 'center',
-        borderRadius:10
+        borderRadius: 10
     },
     textConnection: {
         color: 'white',
