@@ -6,24 +6,22 @@ import {
 } from 'react-native-chart-kit'
 import Data from '../../file.json'
 
-// Total dépenses
+// SOMME des dépenses
 const totalCountExpenses = (json) => {
     return json.map((e) => e.expenses.map((e) => e.amount)).map((e) => {
         return e.map((e) => +(e.replace(/[€,]/g, '')))
     })
 }
 const expenses = totalCountExpenses(Data)
-console.log('dépenses',expenses)
-// Total revenus
+// SOMME des revenus
 const totalCountIncomes = (json) => {
     return json.map((e) => e.incomes.map((e) => e.amount)).map((e) => {
         return e.map((e) => +(e.replace(/[€,]/g, '')))
     })
 }
 const incomes = totalCountIncomes(Data)
-console.log('revenus',incomes)
 
-// Méthode Dates Dépenses
+// Format des Dates YYYY/MM/DD
 const datesExpenses = (json) => {
     return json.map((e) => e.expenses.map((e) => e.date)).map((e) => e.map((e) => e.substring(0, 10)))
 }
@@ -37,39 +35,77 @@ const frSortedDatesExpenses = sortedDatesExpenses.map((e)=>{
 e = new Date(e)    
 return e.toLocaleDateString("fr")
 })
-const objects = Data.map((e)=>{
+// TABLEAU DEPENSES/ EXPENSES
+const objectsExp = Data.map((e)=>{
 return e.expenses
+})
+// TABLEAU REVENUS/ INCOMES
+const objectsInc = Data.map((e)=>{
+    return e.incomes
+    })
+console.log("obj",objectsExp[0],objectsInc[0]);
+// DEPENSES => TRI DES OBJETS PAR DATE  
+const objAreSortedExp = objectsExp[0].sort((a,b)=>a.date>b.date)
+// DEPENSES => TABLEAU DES DATES TRIEES & FORMATEES
+const datesAreSortedAndFormattedForExpenses = objAreSortedExp.map((e)=>{
+    return e.date.substring(0, 10)
+})
+const datesExpAreSortedAndInFrFormat = datesAreSortedAndFormattedForExpenses.map((e)=>{
+    e = new Date(e)
+    return e.toLocaleDateString('fr-FR')
+})
+console.log(datesExpAreSortedAndInFrFormat,"test dates dépenses");
+/* console.log(datesAreSortedAndFormattedForExpenses,"datesAreSortedAndFormattedForExpenses")
+ */// DEPENSES => TABLEAU DES DEPENSES EN FONCTION DES DATES TRIEES
+const expensesAreWellSorted = objAreSortedExp.map((e)=>{
+    return +(e.amount.replace(/[€,]/g, ''))
+})
 
+
+// REVENUS => TRI DES OBJETS PAR DATE
+const objAreSortedInc = objectsInc[0].sort((a,b)=>a.date>b.date)
+// REVENUS => TABLEAU DES DATES TRIEES & FORMATEES
+const datesAreSortedAndFormattedForIncomes = objAreSortedInc.map((e)=>{
+    return e.date.substring(0, 10)
 })
-console.log("obj",objects[0]);
-const youpi = objects[0].map((e)=>{
-    console.log(e);
+const datesIncAreSortedAndInFrFormat = datesAreSortedAndFormattedForIncomes.map((e)=>{
+    e = new Date(e)
+    return e.toLocaleDateString('fr-FR')
 })
-//TENTATIVES
-/* const createAnObjetDatesAndExpenses = (array1,array2) =>{
-    let obj = {}
- array1.forEach((e,i)=>{
-obj[e] = array2[i]
+console.log(datesIncAreSortedAndInFrFormat,"test dates revenus");
+// REVENUS => TABLEAU DES REVENUS EN FONCTION DES DATES TRIEES
+const incomesAreWellSorted = objAreSortedInc.map((e)=>{
+    return +(e.amount.replace(/[€,]/g, ''))
 })
-return obj
+console.log(incomesAreWellSorted,"expensesAreWellSorted")
+
+
+// Nombre d'objets dans mon tableau de dépenses || Output : 5
+const countOcc = objectsExp[0].reduce((acc,val)=> acc+1,0)
+/* console.log("countOcc",countOcc);
+ */// Somme des dépenses
+const sumExpenses = objectsExp[0].reduce((acc,exp)=>acc + exp.amount,0)
+/* console.log("sumExpenses",sumExpenses);
+ */// Array of dates (format de base)
+const arrayOfDates = objectsExp[0].reduce((acc,exp)=>[...acc, exp.date],[])
+/* console.log("arrayOfDates",arrayOfDates);
+ */// Array of dates au format YYYY/MM/DD
+const arrayOfMiniDates = objectsExp[0].reduce((acc,exp)=>[...acc, exp.date],[]).map((e)=>e.substring(0, 10))
+/* console.log("arrayOfMiniDates",arrayOfMiniDates);
+ */
+
+// JUste un seul tableau
+/* const flatten = (acc, item)=>{
+    if(Array.isArray(item)){
+        return [...acc, ...item.reduce(flatten,[])]
+    }
+    return [...acc,item]
 }
-console.log(realDatesExpenses,expenses[0]);
- let myNewTruc = createAnObjetDatesAndExpenses(realDatesExpenses,expenses[0])
-console.log(myNewTruc);
-// Tri des dates , de la + ancienne à la plus récente
-const sortedDatesExpenses = realDatesExpenses[0].sort((a,b)=>a>b) */
-/* const indices = Array.from(realDatesExpenses.keys())
-                     .sort( (a,b) => realDatesExpenses[a].localeCompare(realDatesExpenses[b]) )
 
-                     const sortedExpensesFnDates = indices.map(i => expenses[i]) 
-                     console.log(sortedExpensesFnDates) */
-/* const indices = Array.from(realDatesExpenses.keys())
-                     .sort( (a,b) => realDatesExpenses[a].localeCompare(realDatesExpenses[b]) )
+let result = objects[0].reduce(flatten,[])
+console.log(result,"result"); */
+// FIN
 
-                     sortedAge = indices.map(i => age[i])     
-console.log("frSortedDates",frSortedDatesExpenses) */
-/* console.log(realDatesExpenses, 'pas triées')
-console.log(sortedDates, 'triées') */
 // Méthode Dates Revenus
 const datesIncomes = (json) => {
     return json.map((e) => e.incomes.map((e) => e.date)).map((e) => e.map((e) => e.substring(0, 10)))
@@ -83,17 +119,17 @@ const Stats = ({ navigation }) => {
 
 // Voir pour les revenus et correler dates avec dépenses/revenus
     const dataExpenses = {
-        labels: frSortedDatesExpenses,
+        labels: datesExpAreSortedAndInFrFormat,
         datasets: [{
-            data: expenses[0]
+            data:expensesAreWellSorted
         }],
     };
 
 
     const dataIncomes = {
-        labels: realDatesIncomes[0],
+        labels: datesIncAreSortedAndInFrFormat,
         datasets: [{
-            data: incomes[0]
+            data: incomesAreWellSorted
         }],
     };
 
